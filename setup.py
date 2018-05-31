@@ -32,9 +32,13 @@ import codecs
 import os
 import sys
 
-from pip.req import parse_requirements
 from setuptools import setup, find_packages
 from os.path import abspath, dirname, join
+
+def parse_requirements(filename):
+    """ load requirements from a pip requirements file """
+    lineiter = (line.strip() for line in open(filename))
+    return [line for line in lineiter if line and not line.startswith("#")]
 
 here = abspath(dirname(__file__))
 
@@ -48,9 +52,7 @@ if sys.argv[-1] == 'publish':
     print("  git push --tags")
     sys.exit()
 
-install_reqs = parse_requirements('requirements.txt', session="")
-reqs = [str(ir.req) for ir in install_reqs]
-
+reqs = parse_requirements('requirements.txt')
 
 def get_data_files():
     man_path = '/usr/share/man/man7'
